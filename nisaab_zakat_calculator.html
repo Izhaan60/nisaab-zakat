@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nisaab - Official Global Zakat Calculator & Sharia Guide</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                            950: '#052e16',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        arabic: ['"Amiri"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-emerald {
+            background: linear-gradient(135deg, #052e16 0%, #064e3b 50%, #0f766e 100%);
+        }
+        .gold-border-glow {
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.15);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #15803d;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-emerald-200 selection:text-emerald-900">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-emerald-950 text-emerald-200 text-xs py-2 px-4 text-center border-b border-emerald-900 flex justify-center items-center gap-2">
+        <i class="fa-solid fa-moon text-gold-400"></i>
+        <span>Calculations strictly follow authentic Fiqh standards (2.5% on qualifying net assets)</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-800 text-gold-400 flex items-center justify-center font-serif text-2xl font-bold shadow-md shadow-emerald-900/20 border border-emerald-700">
+                        ن
+                    </div>
+                    <div>
+                        <span class="text-2xl font-serif font-bold text-emerald-950 tracking-tight block leading-none">Nisaab</span>
+                        <span class="text-[10px] uppercase font-semibold text-emerald-700 tracking-wider">Official Zakat Portal</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#calculator" class="hover:text-emerald-700 transition-colors">Calculator</a>
+                    <a href="#nisab-info" class="hover:text-emerald-700 transition-colors">Nisab Thresholds</a>
+                    <a href="#guide" class="hover:text-emerald-700 transition-colors">Sharia Guide</a>
+                    <a href="#faq" class="hover:text-emerald-700 transition-colors">FAQs</a>
+                </nav>
+
+                <!-- Dynamic Currency Selector & Mobile Menu CTA -->
+                <div class="flex items-center gap-3">
+                    <div class="relative flex items-center bg-slate-100 hover:bg-slate-200/80 rounded-xl p-1.5 transition-colors border border-slate-200">
+                        <i class="fa-solid fa-globe text-emerald-700 ml-2 text-sm"></i>
+                        <select id="currencySelect" onchange="updateCurrency()" class="bg-transparent text-xs sm:text-sm font-semibold text-slate-800 pl-2 pr-4 py-1 focus:outline-none cursor-pointer">
+                            <option value="PKR">PKR (Rs.)</option>
+                            <option value="USD" selected>USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="SAR">SAR (SR)</option>
+                            <option value="AED">AED (AED)</option>
+                            <option value="INR">INR (₹)</option>
+                            <option value="BDT">BDT (৳)</option>
+                            <option value="CAD">CAD (C$)</option>
+                            <option value="AUD">AUD (A$)</option>
+                        </select>
+                    </div>
+
+                    <a href="#calculator" class="hidden sm:flex items-center gap-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-700/20">
+                        <span>Calculate Now</span>
+                        <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-emerald-50/60 via-slate-50 to-slate-50 py-12 md:py-20 border-b border-slate-200/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <div class="inline-flex items-center gap-2 bg-emerald-100/80 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold text-emerald-800 mb-2">
+                    <i class="fa-solid fa-shield-halved"></i> 100% Sharia Compliant & Private
+                </div>
+                
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-slate-900 tracking-tight leading-tight">
+                    Fulfill Your Sacred Duty with <span class="text-emerald-800 underline decoration-gold-400 decoration-wavy decoration-2">Precision</span>
+                </h1>
+
+                <!-- Quranic Verse / Hadith Quote -->
+                <div class="pt-4 pb-2">
+                    <p class="font-arabic text-2xl sm:text-3xl text-emerald-950 mb-2 leading-relaxed" dir="rtl">
+                        وَأَقِيمُوا۟ ٱلصَّلَوٰةَ وَءَاتُوا۟ ٱلزَّكَوٰةَ وَأَقْرِضُوا۟ ٱللَّهَ قَرْضًا حَسَنًا
+                    </p>
+                    <p class="text-xs sm:text-sm text-slate-600 italic font-serif">
+                        "And establish prayer and give Zakat and loan Allah a goodly loan." — Surah Al-Muzzammil (73:20)
+                    </p>
+                </div>
+
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+                    Nisaab provides Muslims worldwide with an accurate, authentic tool to calculate Zakat across cash, gold, silver, investments, and business inventory in your local currency.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CALCULATOR SECTION -->
+    <section id="calculator" class="py-12 md:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">01 / Interactive Tool</span>
+                    <h2 class="text-2xl sm:text-3xl font-serif font-bold text-slate-900 mt-1">A calculation made <span class="italic font-normal text-emerald-800">simple & transparent.</span></h2>
+                </div>
+
+                <!-- Standard Toggle (Silver vs Gold) -->
+                <div class="bg-slate-200/80 p-1 rounded-xl flex items-center text-xs font-semibold max-w-fit">
+                    <span class="text-slate-600 px-3 py-1.5">Nisab Benchmark:</span>
+                    <button id="btnNisabSilver" onclick="setNisabStandard('silver')" class="px-4 py-1.5 rounded-lg bg-emerald-800 text-white shadow-sm transition-all">
+                        Silver Standard (Recommended)
+                    </button>
+                    <button id="btnNisabGold" onclick="setNisabStandard('gold')" class="px-4 py-1.5 rounded-lg text-slate-700 hover:text-slate-900 transition-all">
+                        Gold Standard
+                    </button>
+                </div>
+            </div>
+
+            <!-- CALCULATOR GRID LAYOUT -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- LEFT COLUMN: INPUT FORM CARDS (8 COLS) -->
+                <div class="lg:col-span-8 space-y-6">
+
+                    <!-- CARD 1: LIQUID CASH & ACCOUNTS -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900">Cash & Bank Balances</h3>
+                                <p class="text-xs text-slate-500">Physical cash, checking, savings, and deposited money</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Cash in Hand & Home</label>
+                                <div class="relative">
+                                    <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                    <input type="number" id="cashInHand" oninput="calculateZakat()" placeholder="0" min="0" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm transition-all font-semibold">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Bank Accounts (Savings / Current)</label>
+                                <div class="relative">
+                                    <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                    <input type="number" id="bankBalance" oninput="calculateZakat()" placeholder="0" min="0" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm transition-all font-semibold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD 2: GOLD ASSETS -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-coins"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-slate-900">Gold Holdings</h3>
+                                    <p class="text-xs text-slate-500">Jewelry, bars, coins, and investments</p>
+                                </div>
+                            </div>
+
+                            <!-- Weight Unit Toggle -->
+                            <div class="bg-slate-100 p-1 rounded-lg text-[11px] font-semibold flex">
+                                <button id="goldUnitGrams" onclick="setGoldUnit('grams')" class="px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs">Grams</button>
+                                <button id="goldUnitTolas" onclick="setGoldUnit('tolas')" class="px-2.5 py-1 rounded text-slate-600 hover:text-slate-900">Tolas</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Weight (<span id="goldUnitLabel">Grams</span>)</label>
+                                <input type="number" id="goldWeight" oninput="calculateZakat()" placeholder="0" min="0" step="any" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Purity Karat</label>
+                                <select id="goldKarat" onchange="calculateZakat()" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                                    <option value="1.0">24K (99.9% Pure)</option>
+                                    <option value="0.916">22K (91.6% Pure)</option>
+                                    <option value="0.875">21K (87.5% Pure)</option>
+                                    <option value="0.750">18K (75.0% Pure)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Rate per <span id="goldRateUnitLabel">Gram</span> (24K)</label>
+                                <div class="relative">
+                                    <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                    <input type="number" id="goldRate" oninput="calculateZakat()" placeholder="75" min="0" step="any" class="w-full pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-right">
+                            <span class="text-xs text-slate-500">Gold Asset Total: </span>
+                            <span class="text-sm font-bold text-slate-900"><span class="curr-symbol">$</span><span id="goldTotalDisplay">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 3: SILVER ASSETS -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-ring"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-slate-900">Silver Holdings</h3>
+                                    <p class="text-xs text-slate-500">Silver utensils, coins, bars, or ornaments</p>
+                                </div>
+                            </div>
+
+                            <!-- Weight Unit Toggle -->
+                            <div class="bg-slate-100 p-1 rounded-lg text-[11px] font-semibold flex">
+                                <button id="silverUnitGrams" onclick="setSilverUnit('grams')" class="px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs">Grams</button>
+                                <button id="silverUnitTolas" onclick="setSilverUnit('tolas')" class="px-2.5 py-1 rounded text-slate-600 hover:text-slate-900">Tolas</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Weight (<span id="silverUnitLabel">Grams</span>)</label>
+                                <input type="number" id="silverWeight" oninput="calculateZakat()" placeholder="0" min="0" step="any" class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Rate per <span id="silverRateUnitLabel">Gram</span></label>
+                                <div class="relative">
+                                    <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                    <input type="number" id="silverRate" oninput="calculateZakat()" placeholder="0.9" min="0" step="any" class="w-full pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-right">
+                            <span class="text-xs text-slate-500">Silver Asset Total: </span>
+                            <span class="text-sm font-bold text-slate-900"><span class="curr-symbol">$</span><span id="silverTotalDisplay">0</span></span>
+                        </div>
+                    </div>
+
+                    <!-- CARD 4: BUSINESS INVENTORY & INVESTMENTS -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-slate-100">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900">Business Inventory & Investments</h3>
+                                <p class="text-xs text-slate-500">Merchandise for resale, stocks, and business cash</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Trade Goods / Inventory Resale Value</label>
+                                <div class="relative">
+                                    <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                    <input type="number" id="businessInventory" oninput="calculateZakat()" placeholder="0" min="0" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-700 mb-1">Stocks / Mutual Funds / Shares</label>
+                                <div class="relative">
+                                    <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                    <input type="number" id="investments" oninput="calculateZakat()" placeholder="0" min="0" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-emerald-600 focus:outline-none text-sm font-semibold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CARD 5: LIABILITIES & DEBTS (TO SUBTRACT) -->
+                    <div class="bg-red-50/50 rounded-2xl p-6 border border-red-100 shadow-sm">
+                        <div class="flex items-center gap-3 mb-4 pb-3 border-b border-red-100">
+                            <div class="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-hand-holding-dollar"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900">Immediate Liabilities & Debts <span class="text-xs font-normal text-red-600">(Deductions)</span></h3>
+                                <p class="text-xs text-slate-500">Debts due immediately or within the upcoming lunar year</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Debts, Unpaid Bills & Loans Owed to Others</label>
+                            <div class="relative">
+                                <span class="curr-symbol absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">$</span>
+                                <input type="number" id="liabilities" oninput="calculateZakat()" placeholder="0" min="0" class="w-full pl-8 pr-4 py-2.5 bg-white border border-red-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:outline-none text-sm font-semibold text-red-700">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN: SUMMARY STICKY PANEL (4 COLS) -->
+                <div class="lg:col-span-4 lg:sticky lg:top-28">
+                    <div class="gradient-emerald text-white rounded-3xl p-6 shadow-xl border border-emerald-800 space-y-6">
+                        
+                        <div class="flex items-center justify-between border-b border-emerald-800/80 pb-4">
+                            <span class="text-xs uppercase font-bold tracking-widest text-emerald-300">Zakat Summary</span>
+                            <span class="text-[10px] bg-emerald-900/90 text-emerald-200 border border-emerald-700 px-2.5 py-1 rounded-full font-semibold">
+                                2.5% Rate
+                            </span>
+                        </div>
+
+                        <!-- NET ASSETS BREAKDOWN -->
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between items-center text-emerald-100">
+                                <span>Total Gross Assets:</span>
+                                <span class="font-semibold"><span class="curr-symbol">$</span><span id="summaryGross">0</span></span>
+                            </div>
+                            <div class="flex justify-between items-center text-red-200">
+                                <span>Deductible Debts:</span>
+                                <span class="font-semibold">- <span class="curr-symbol">$</span><span id="summaryLiabilities">0</span></span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-emerald-800 text-emerald-50 font-bold">
+                                <span>Net Zakatable Wealth:</span>
+                                <span><span class="curr-symbol">$</span><span id="summaryNet">0</span></span>
+                            </div>
+                        </div>
+
+                        <!-- NISAB THRESHOLD STATUS BADGE -->
+                        <div class="bg-emerald-950/70 rounded-2xl p-4 border border-emerald-800 space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-emerald-300">Active Nisab (<span id="nisabTypeDisplay">Silver</span>):</span>
+                                <span class="font-bold text-white"><span class="curr-symbol">$</span><span id="nisabThresholdVal">0</span></span>
+                            </div>
+                            <p class="text-[11px] text-emerald-300/80 leading-tight">
+                                Benchmark: <span id="nisabBenchmarkText">612.36 grams (52.5 Tolas) of Silver</span>
+                            </p>
+                            <div id="nisabStatusBadge" class="mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-slate-800/80 text-slate-300 border border-slate-700">
+                                Enter rate to check eligibility
+                            </div>
+                        </div>
+
+                        <!-- FINAL ZAKAT PAYABLE DISPLAY -->
+                        <div class="pt-2 text-center">
+                            <span class="text-xs uppercase tracking-widest text-emerald-300 block mb-1">Estimated Zakat Payable</span>
+                            <div class="text-4xl sm:text-5xl font-serif font-bold text-gold-400 tracking-tight">
+                                <span class="curr-symbol">$</span><span id="zakatPayableDisplay">0</span>
+                            </div>
+                            <p class="text-[11px] text-emerald-200/70 mt-2">
+                                Exactly 1/40th (2.5%) of your net wealth
+                            </p>
+                        </div>
+
+                        <!-- RESET & PRINT BUTTONS -->
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <button onclick="resetCalculator()" class="py-2.5 rounded-xl border border-emerald-700 hover:bg-emerald-900/50 text-xs font-semibold text-emerald-200 transition-colors">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Reset
+                            </button>
+                            <button onclick="window.print()" class="py-2.5 rounded-xl bg-gold-500 hover:bg-gold-600 text-emerald-950 text-xs font-bold transition-all shadow-md">
+                                <i class="fa-solid fa-print mr-1"></i> Print / Save
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- NISAB THRESHOLD EXPLANATION CARD -->
+    <section id="nisab-info" class="py-12 bg-white border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">Understanding Nisab</span>
+                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-slate-900 mt-1">What is the Nisab Threshold?</h2>
+                <p class="text-sm text-slate-600 mt-2">Nisab is the minimum threshold of net wealth a Muslim must own for one full lunar year before Zakat becomes obligatory.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Silver Standard -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-emerald-700 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-xl">
+                        Recommended for Charity
+                    </div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center text-lg font-bold">
+                            Ag
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900">Silver Nisab Standard</h3>
+                            <p class="text-xs text-slate-500">52.5 Tolas / 612.36 Grams</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        The majority of classical and contemporary Islamic scholars strongly recommend using the <strong>Silver standard</strong> for liquid wealth and cash. Because silver has a lower monetary threshold, it benefits more poor recipients (Mustahiqeen).
+                    </p>
+                </div>
+
+                <!-- Gold Standard -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-bold">
+                            Au
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900">Gold Nisab Standard</h3>
+                            <p class="text-xs text-slate-500">7.5 Tolas / 87.48 Grams</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        The <strong>Gold standard</strong> is traditionally used when an individual holds wealth primarily in gold. If your net wealth meets or exceeds the market value of 87.48 grams of pure gold, Zakat is due at 2.5%.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHARIA GUIDE SECTION -->
+    <section id="guide" class="py-12 md:py-20 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">Authentic Knowledge</span>
+                <h2 class="text-3xl font-serif font-bold text-slate-900 mt-1">Sharia Rules & Eligibility Guide</h2>
+                <p class="text-sm text-slate-600 mt-2">Verified guidelines based on Holy Quran and Sahih Sunnah</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Rule Card 1 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold">
+                        1
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg">Conditions of Obligation</h3>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4 leading-relaxed">
+                        <li>Must be a Muslim (Adult, sane).</li>
+                        <li>Must own net wealth equal to or above Nisab.</li>
+                        <li>Complete ownership of wealth for 1 full lunar year (Hawl).</li>
+                        <li>Wealth must be productive or naturally growing (Cash, Gold, Trade Goods).</li>
+                    </ul>
+                </div>
+
+                <!-- Rule Card 2 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold">
+                        2
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg">Zakatable Assets</h3>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4 leading-relaxed">
+                        <li>Cash in hand, bank deposits, and cash loans given to others.</li>
+                        <li>Gold & Silver in any form (jewelry, bullion, coins).</li>
+                        <li>Business stock, inventory, and goods intended for resale.</li>
+                        <li>Shares, stocks, mutual funds, and dividend income.</li>
+                    </ul>
+                </div>
+
+                <!-- Rule Card 3 -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold">
+                        3
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-lg">Exempted Assets (No Zakat)</h3>
+                    <ul class="text-xs text-slate-600 space-y-2 list-disc pl-4 leading-relaxed">
+                        <li>Personal primary residence/home.</li>
+                        <li>Personal vehicles, clothing, and household furniture.</li>
+                        <li>Tools of trade or machinery used in manufacturing.</li>
+                        <li>Money set aside for immediate basic living expenses.</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FAQs SECTION -->
+    <section id="faq" class="py-12 md:py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold uppercase tracking-widest text-emerald-700">Masail & Answers</span>
+                <h2 class="text-3xl font-serif font-bold text-slate-900 mt-1">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="space-y-4">
+
+                <details class="group bg-slate-50 p-5 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900 text-sm">
+                        <span>Can I give Zakat to my close relatives?</span>
+                        <span class="transition group-open:rotate-180 text-emerald-700">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="mt-3 text-xs text-slate-600 leading-relaxed">
+                        You <strong>cannot</strong> give Zakat to your direct ascendants (parents, grandparents) or direct descendants (children, grandchildren), nor to your spouse. However, giving Zakat to eligible poor siblings, aunts, uncles, or in-laws is not only permissible but carries double reward (for charity and upholding family ties).
+                    </p>
+                </details>
+
+                <details class="group bg-slate-50 p-5 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900 text-sm">
+                        <span>Can Zakat be paid in monthly installments?</span>
+                        <span class="transition group-open:rotate-180 text-emerald-700">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="mt-3 text-xs text-slate-600 leading-relaxed">
+                        Yes! You can calculate your annual Zakat amount and distribute it in monthly installments throughout the year (e.g., during Ramadan or every month), provided the total estimated Zakat is fully cleared by the end of your lunar year.
+                    </p>
+                </details>
+
+                <details class="group bg-slate-50 p-5 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900 text-sm">
+                        <span>How is Zakat calculated on mixed jewelry (22K, 21K, 18K)?</span>
+                        <span class="transition group-open:rotate-180 text-emerald-700">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="mt-3 text-xs text-slate-600 leading-relaxed">
+                        Zakat is paid on the net pure gold weight. Our calculator automatically adjusts for Karat purity (e.g., 22K contains 91.6% pure gold, 18K contains 75% pure gold) to give you the exact monetary value based on 24K market rates.
+                    </p>
+                </details>
+
+                <details class="group bg-slate-50 p-5 rounded-2xl border border-slate-200 [&_summary::-webkit-details-marker]:hidden">
+                    <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900 text-sm">
+                        <span>What if I owe long-term loans (e.g., home mortgage)?</span>
+                        <span class="transition group-open:rotate-180 text-emerald-700">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <p class="mt-3 text-xs text-slate-600 leading-relaxed">
+                        According to most contemporary scholars, only the debt installments due immediately or within the current upcoming lunar year should be deducted from your Zakatable assets, rather than deducting the entire multi-year long-term debt.
+                    </p>
+                </details>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-emerald-950 text-emerald-300 py-12 border-t border-emerald-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+            
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-emerald-900 pb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-800 text-gold-400 flex items-center justify-center font-serif text-2xl font-bold border border-emerald-700">
+                        ن
+                    </div>
+                    <div>
+                        <span class="text-xl font-serif font-bold text-white tracking-tight block">Nisaab</span>
+                        <span class="text-[10px] text-emerald-400">Global Sharia Compliance Portal</span>
+                    </div>
+                </div>
+
+                <div class="text-xs text-emerald-400 text-center md:text-right">
+                    Calculations based on standard 2.5% (1/40th) Hawl principles.
+                </div>
+            </div>
+
+            <!-- Scholar Disclaimer -->
+            <div class="bg-emerald-900/40 p-4 rounded-xl text-[11px] text-emerald-300/80 leading-relaxed text-center max-w-3xl mx-auto border border-emerald-800/60">
+                <strong>Disclaimer:</strong> Nisaab is designed to provide accurate estimates based on standard authentic Islamic Fiqh rules. For intricate corporate assets, complex partnership trusts, or personal doubts, please consult a qualified local Islamic scholar.
+            </div>
+
+            <div class="text-center text-xs text-emerald-400">
+                &copy; <span id="year"></span> Nisaab. Made with sincerity for the Global Muslim Ummah.
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Global State Variables
+        let currentCurrency = 'USD';
+        let currencySymbol = '$';
+
+        let activeNisabStandard = 'silver'; // 'silver' or 'gold'
+        let goldUnit = 'grams'; // 'grams' or 'tolas'
+        let silverUnit = 'grams'; // 'grams' or 'tolas'
+
+        const CURRENCY_SYMBOLS = {
+            PKR: 'Rs. ',
+            USD: '$',
+            EUR: '€',
+            GBP: '£',
+            SAR: 'SR ',
+            AED: 'AED ',
+            INR: '₹',
+            BDT: '৳',
+            CAD: 'C$',
+            AUD: 'A$'
+        };
+
+        // Initialize on Load
+        window.onload = function() {
+            document.getElementById('year').innerText = new Date().getFullYear();
+            updateCurrency();
+        };
+
+        // Update Currency Across Interface
+        function updateCurrency() {
+            currentCurrency = document.getElementById('currencySelect').value;
+            currencySymbol = CURRENCY_SYMBOLS[currentCurrency] || '$';
+
+            // Update all symbol spans
+            const symbols = document.querySelectorAll('.curr-symbol');
+            symbols.forEach(el => el.innerText = currencySymbol);
+
+            calculateZakat();
+        }
+
+        // Toggle Nisab Standard (Silver vs Gold)
+        function setNisabStandard(standard) {
+            activeNisabStandard = standard;
+            const btnSilver = document.getElementById('btnNisabSilver');
+            const btnGold = document.getElementById('btnNisabGold');
+
+            if (standard === 'silver') {
+                btnSilver.className = "px-4 py-1.5 rounded-lg bg-emerald-800 text-white shadow-sm transition-all";
+                btnGold.className = "px-4 py-1.5 rounded-lg text-slate-700 hover:text-slate-900 transition-all";
+                document.getElementById('nisabTypeDisplay').innerText = 'Silver';
+                document.getElementById('nisabBenchmarkText').innerText = '612.36 grams (52.5 Tolas) of Silver';
+            } else {
+                btnGold.className = "px-4 py-1.5 rounded-lg bg-emerald-800 text-white shadow-sm transition-all";
+                btnSilver.className = "px-4 py-1.5 rounded-lg text-slate-700 hover:text-slate-900 transition-all";
+                document.getElementById('nisabTypeDisplay').innerText = 'Gold';
+                document.getElementById('nisabBenchmarkText').innerText = '87.48 grams (7.5 Tolas) of Pure Gold';
+            }
+
+            calculateZakat();
+        }
+
+        // Gold Unit Toggles
+        function setGoldUnit(unit) {
+            goldUnit = unit;
+            const btnGrams = document.getElementById('goldUnitGrams');
+            const btnTolas = document.getElementById('goldUnitTolas');
+
+            if (unit === 'grams') {
+                btnGrams.className = "px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs";
+                btnTolas.className = "px-2.5 py-1 rounded text-slate-600 hover:text-slate-900";
+                document.getElementById('goldUnitLabel').innerText = 'Grams';
+                document.getElementById('goldRateUnitLabel').innerText = 'Gram';
+            } else {
+                btnTolas.className = "px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs";
+                btnGrams.className = "px-2.5 py-1 rounded text-slate-600 hover:text-slate-900";
+                document.getElementById('goldUnitLabel').innerText = 'Tolas';
+                document.getElementById('goldRateUnitLabel').innerText = 'Tola';
+            }
+            calculateZakat();
+        }
+
+        // Silver Unit Toggles
+        function setSilverUnit(unit) {
+            silverUnit = unit;
+            const btnGrams = document.getElementById('silverUnitGrams');
+            const btnTolas = document.getElementById('silverUnitTolas');
+
+            if (unit === 'grams') {
+                btnGrams.className = "px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs";
+                btnTolas.className = "px-2.5 py-1 rounded text-slate-600 hover:text-slate-900";
+                document.getElementById('silverUnitLabel').innerText = 'Grams';
+                document.getElementById('silverRateUnitLabel').innerText = 'Gram';
+            } else {
+                btnTolas.className = "px-2.5 py-1 rounded bg-white text-slate-900 shadow-xs";
+                btnGrams.className = "px-2.5 py-1 rounded text-slate-600 hover:text-slate-900";
+                document.getElementById('silverUnitLabel').innerText = 'Tolas';
+                document.getElementById('silverRateUnitLabel').innerText = 'Tola';
+            }
+            calculateZakat();
+        }
+
+        // Core Zakat Calculation Engine
+        function calculateZakat() {
+            // Cash inputs
+            const cash = parseFloat(document.getElementById('cashInHand').value) || 0;
+            const bank = parseFloat(document.getElementById('bankBalance').value) || 0;
+
+            // Gold inputs
+            const gWeight = parseFloat(document.getElementById('goldWeight').value) || 0;
+            const gKaratMultiplier = parseFloat(document.getElementById('goldKarat').value) || 1.0;
+            const gRate = parseFloat(document.getElementById('goldRate').value) || 0;
+
+            // Silver inputs
+            const sWeight = parseFloat(document.getElementById('silverWeight').value) || 0;
+            const sRate = parseFloat(document.getElementById('silverRate').value) || 0;
+
+            // Business & Liabilities
+            const business = parseFloat(document.getElementById('businessInventory').value) || 0;
+            const stocks = parseFloat(document.getElementById('investments').value) || 0;
+            const liabilities = parseFloat(document.getElementById('liabilities').value) || 0;
+
+            // Calculate Gold Total Value
+            // Pure weight = weight * karat purity factor
+            const pureGoldWeight = gWeight * gKaratMultiplier;
+            const totalGoldVal = pureGoldWeight * gRate;
+            document.getElementById('goldTotalDisplay').innerText = formatNum(totalGoldVal);
+
+            // Calculate Silver Total Value
+            const totalSilverVal = sWeight * sRate;
+            document.getElementById('silverTotalDisplay').innerText = formatNum(totalSilverVal);
+
+            // Total Gross & Net Wealth
+            const grossWealth = cash + bank + totalGoldVal + totalSilverVal + business + stocks;
+            const netWealth = Math.max(0, grossWealth - liabilities);
+
+            // Calculate Nisab Threshold Value
+            let nisabThreshold = 0;
+            if (activeNisabStandard === 'silver') {
+                // Silver Nisab = 612.36 grams or 52.5 tolas
+                if (sRate > 0) {
+                    nisabThreshold = (silverUnit === 'grams') ? (612.36 * sRate) : (52.5 * sRate);
+                }
+            } else {
+                // Gold Nisab = 87.48 grams or 7.5 tolas
+                if (gRate > 0) {
+                    nisabThreshold = (goldUnit === 'grams') ? (87.48 * gRate) : (7.5 * gRate);
+                }
+            }
+
+            // Calculate Final Zakat Payable (2.5%)
+            let zakatPayable = 0;
+            const badge = document.getElementById('nisabStatusBadge');
+
+            if (nisabThreshold > 0) {
+                if (netWealth >= nisabThreshold) {
+                    zakatPayable = netWealth * 0.025;
+                    badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+                    badge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> Eligible for Zakat (Net wealth exceeds Nisab)';
+                } else {
+                    zakatPayable = 0;
+                    badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
+                    badge.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i> Below Nisab Threshold (No Zakat due)';
+                }
+            } else {
+                badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-slate-800/80 text-slate-300 border border-slate-700";
+                badge.innerHTML = 'Enter metal rate to check eligibility';
+                if (netWealth > 0) {
+                    zakatPayable = netWealth * 0.025; // Estimate even if metal rate isn't set
+                }
+            }
+
+            // UI Render
+            document.getElementById('summaryGross').innerText = formatNum(grossWealth);
+            document.getElementById('summaryLiabilities').innerText = formatNum(liabilities);
+            document.getElementById('summaryNet').innerText = formatNum(netWealth);
+            document.getElementById('nisabThresholdVal').innerText = formatNum(nisabThreshold);
+            document.getElementById('zakatPayableDisplay').innerText = formatNum(zakatPayable);
+        }
+
+        // Helper: Number Formatter with commas
+        function formatNum(num) {
+            return num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        }
+
+        // Reset All Form Fields
+        function resetCalculator() {
+            document.querySelectorAll('input[type="number"]').forEach(input => input.value = '');
+            calculateZakat();
+        }
+    </script>
+</body>
+</html>
