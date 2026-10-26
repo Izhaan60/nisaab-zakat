@@ -689,8 +689,28 @@
             calculateZakat();
         }
 
+        const GRAMS_PER_TOLA = 11.6638;
+
+        // Keep the entered metal value unchanged when switching units.
+        function convertMetalUnit(weightId, rateId, nextUnit, currentUnit) {
+            if (nextUnit === currentUnit) return;
+
+            const weightInput = document.getElementById(weightId);
+            const rateInput = document.getElementById(rateId);
+            const weight = parseFloat(weightInput.value);
+            const rate = parseFloat(rateInput.value);
+
+            if (Number.isFinite(weight) && weight >= 0) {
+                weightInput.value = (nextUnit === 'tolas' ? weight / GRAMS_PER_TOLA : weight * GRAMS_PER_TOLA).toFixed(4);
+            }
+            if (Number.isFinite(rate) && rate >= 0) {
+                rateInput.value = (nextUnit === 'tolas' ? rate * GRAMS_PER_TOLA : rate / GRAMS_PER_TOLA).toFixed(4);
+            }
+        }
+
         // Gold Unit Toggles
         function setGoldUnit(unit) {
+            convertMetalUnit('goldWeight', 'goldRate', unit, goldUnit);
             goldUnit = unit;
             const btnGrams = document.getElementById('goldUnitGrams');
             const btnTolas = document.getElementById('goldUnitTolas');
@@ -711,6 +731,7 @@
 
         // Silver Unit Toggles
         function setSilverUnit(unit) {
+            convertMetalUnit('silverWeight', 'silverRate', unit, silverUnit);
             silverUnit = unit;
             const btnGrams = document.getElementById('silverUnitGrams');
             const btnTolas = document.getElementById('silverUnitTolas');
