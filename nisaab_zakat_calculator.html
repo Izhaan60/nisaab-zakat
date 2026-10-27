@@ -1450,8 +1450,12 @@ Disclaimer:</strong> Nisaab is designed to provide accurate estimates based on s
             const readNumber = (id, fallback = 0) => {
                 const input = document.getElementById(id);
                 if (!input) return fallback;
-                const value = input.value.trim();
+                const value = String(input.value || '').trim();
                 return value === '' ? fallback : (parseFloat(value) || 0);
+            };
+            const setText = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
             };
 
             // Cash inputs
@@ -1476,11 +1480,11 @@ Disclaimer:</strong> Nisaab is designed to provide accurate estimates based on s
             // Pure weight = weight * karat purity factor
             const pureGoldWeight = gWeight * gKaratMultiplier;
             const totalGoldVal = pureGoldWeight * gRate;
-            document.getElementById('goldTotalDisplay').innerText = formatNum(totalGoldVal);
+            setText('goldTotalDisplay', formatNum(totalGoldVal));
 
             // Calculate Silver Total Value
             const totalSilverVal = sWeight * sRate;
-            document.getElementById('silverTotalDisplay').innerText = formatNum(totalSilverVal);
+            setText('silverTotalDisplay', formatNum(totalSilverVal));
 
             // Total Gross & Net Wealth
             const grossWealth = cash + bank + totalGoldVal + totalSilverVal + business + stocks;
@@ -1507,27 +1511,33 @@ Disclaimer:</strong> Nisaab is designed to provide accurate estimates based on s
             if (nisabThreshold > 0) {
                 if (netWealth >= nisabThreshold) {
                     zakatPayable = netWealth * 0.025;
-                    badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
-                    badge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Eligible for Zakat (Net wealth exceeds Nisab)';
+                    if (badge) {
+                        badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+                        badge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Eligible for Zakat (Net wealth exceeds Nisab)';
+                    }
                 } else {
                     zakatPayable = 0;
-                    badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
-                    badge.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i>Below Nisab Threshold (No Zakat due)';
+                    if (badge) {
+                        badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
+                        badge.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i>Below Nisab Threshold (No Zakat due)';
+                    }
                 }
             } else {
-                badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-slate-800/80 text-slate-300 border border-slate-700";
-                badge.innerHTML = 'Enter metal rate to check eligibility';
+                if (badge) {
+                    badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-slate-800/80 text-slate-300 border border-slate-700";
+                    badge.textContent = 'Enter metal rate to check eligibility';
+                }
                 if (netWealth > 0) {
                     zakatPayable = netWealth * 0.025; // Estimate even if metal rate isn't set
                 }
             }
 
             // UI Render
-            document.getElementById('summaryGross').innerText = formatNum(grossWealth);
-            document.getElementById('summaryLiabilities').innerText = formatNum(liabilities);
-            document.getElementById('summaryNet').innerText = formatNum(netWealth);
-            document.getElementById('nisabThresholdVal').innerText = formatNum(nisabThreshold);
-            document.getElementById('zakatPayableDisplay').innerText = formatNum(zakatPayable);
+            setText('summaryGross', formatNum(grossWealth));
+            setText('summaryLiabilities', formatNum(liabilities));
+            setText('summaryNet', formatNum(netWealth));
+            setText('nisabThresholdVal', formatNum(nisabThreshold));
+            setText('zakatPayableDisplay', formatNum(zakatPayable));
         }
 
         // Helper: Number Formatter with commas
