@@ -1350,7 +1350,8 @@ Disclaimer:</strong> Nisaab is designed to provide accurate estimates based on s
 
         // Update Currency Across Interface
         function updateCurrency() {
-            currentCurrency = document.getElementById('currencySelect').value;
+            const currencySelect = document.getElementById('currencySelect');
+            currentCurrency = currencySelect ? currencySelect.value : 'USD';
             currencySymbol = CURRENCY_SYMBOLS[currentCurrency] || '$';
 
             // Update all symbol spans
@@ -1444,25 +1445,32 @@ Disclaimer:</strong> Nisaab is designed to provide accurate estimates based on s
 
         // Core Zakat Calculation Engine
         function calculateZakat() {
+            // Some preview states can run this handler before every optional field
+            // has been parsed into the DOM. Treat a missing field like an empty one.
+            const readNumber = (id, fallback = 0) => {
+                const input = document.getElementById(id);
+                if (!input) return fallback;
+                const value = input.value.trim();
+                return value === '' ? fallback : (parseFloat(value) || 0);
+            };
+
             // Cash inputs
-            const cash = parseFloat(document.getElementById('cashInHand').value) || 0;
-            const bank = parseFloat(document.getElementById('bankBalance').value) || 0;
+            const cash = readNumber('cashInHand');
+            const bank = readNumber('bankBalance');
 
             // Gold inputs
-            const gWeight = parseFloat(document.getElementById('goldWeight').value) || 0;
-            const gKaratMultiplier = parseFloat(document.getElementById('goldKarat').value) || 1.0;
-            const goldRateInput = document.getElementById('goldRate');
-            const gRate = goldRateInput.value.trim() === '' ? 75 : (parseFloat(goldRateInput.value) || 0);
+            const gWeight = readNumber('goldWeight');
+            const gKaratMultiplier = readNumber('goldKarat', 1.0);
+            const gRate = readNumber('goldRate', 75);
 
             // Silver inputs
-            const sWeight = parseFloat(document.getElementById('silverWeight').value) || 0;
-            const silverRateInput = document.getElementById('silverRate');
-            const sRate = silverRateInput.value.trim() === '' ? 0.9 : (parseFloat(silverRateInput.value) || 0);
+            const sWeight = readNumber('silverWeight');
+            const sRate = readNumber('silverRate', 0.9);
 
             // Business & Liabilities
-            const business = parseFloat(document.getElementById('businessInventory').value) || 0;
-            const stocks = parseFloat(document.getElementById('investments').value) || 0;
-            const liabilities = parseFloat(document.getElementById('liabilities').value) || 0;
+            const business = readNumber('businessInventory');
+            const stocks = readNumber('investments');
+            const liabilities = readNumber('liabilities');
 
             // Calculate Gold Total Value
             // Pure weight = weight * karat purity factor
