@@ -1336,7 +1336,7 @@ Disclaimer:</strongNisaab is designed to provide accurate estimates based on sta
 
             // Update all symbol spans
             const symbols = document.querySelectorAll('.curr-symbol');
-            symbols.forEach(el =el.innerText = currencySymbol);
+            symbols.forEach((el) => { el.innerText = currencySymbol; });
 
             calculateZakat();
         }
@@ -1373,12 +1373,10 @@ Disclaimer:</strongNisaab is designed to provide accurate estimates based on sta
             const weight = parseFloat(weightInput.value);
             const rate = parseFloat(rateInput.value);
 
-            if (Number.isFinite(weight) && weight 
-= 0) {
+            if (Number.isFinite(weight) && weight >= 0) {
                 weightInput.value = (nextUnit === 'tolas' ? weight / GRAMS_PER_TOLA : weight * GRAMS_PER_TOLA).toFixed(4);
             }
-            if (Number.isFinite(rate) && rate 
-= 0) {
+            if (Number.isFinite(rate) && rate >= 0) {
                 rateInput.value = (nextUnit === 'tolas' ? rate * GRAMS_PER_TOLA : rate / GRAMS_PER_TOLA).toFixed(4);
             }
         }
@@ -1465,12 +1463,12 @@ Disclaimer:</strongNisaab is designed to provide accurate estimates based on sta
             let nisabThreshold = 0;
             if (activeNisabStandard === 'silver') {
                 // Silver Nisab = 612.36 grams or 52.5 tolas
-                if (sRate 0) {
+                if (sRate > 0) {
                     nisabThreshold = (silverUnit === 'grams') ? (612.36 * sRate) : (52.5 * sRate);
                 }
             } else {
                 // Gold Nisab = 87.48 grams or 7.5 tolas
-                if (gRate 0) {
+                if (gRate > 0) {
                     nisabThreshold = (goldUnit === 'grams') ? (87.48 * gRate) : (7.5 * gRate);
                 }
             }
@@ -1479,23 +1477,20 @@ Disclaimer:</strongNisaab is designed to provide accurate estimates based on sta
             let zakatPayable = 0;
             const badge = document.getElementById('nisabStatusBadge');
 
-            if (nisabThreshold 0) {
-                if (netWealth 
-= nisabThreshold) {
+            if (nisabThreshold > 0) {
+                if (netWealth >= nisabThreshold) {
                     zakatPayable = netWealth * 0.025;
                     badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
-                    badge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"
-</iEligible for Zakat (Net wealth exceeds Nisab)';>
+                    badge.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i>Eligible for Zakat (Net wealth exceeds Nisab)';
                 } else {
                     zakatPayable = 0;
                     badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40";
-                    badge.innerHTML = '<i class="fa-solid fa-circle-info mr-1"
-</iBelow Nisab Threshold (No Zakat due)';>
+                    badge.innerHTML = '<i class="fa-solid fa-circle-info mr-1"></i>Below Nisab Threshold (No Zakat due)';
                 }
             } else {
                 badge.className = "mt-2 text-center py-1.5 px-3 rounded-xl text-xs font-bold bg-slate-800/80 text-slate-300 border border-slate-700";
                 badge.innerHTML = 'Enter metal rate to check eligibility';
-                if (netWealth 0) {
+                if (netWealth > 0) {
                     zakatPayable = netWealth * 0.025; // Estimate even if metal rate isn't set
                 }
             }
@@ -1526,7 +1521,7 @@ Disclaimer:</strongNisaab is designed to provide accurate estimates based on sta
                 ['Rate', '2.5% (1/40th)']
             ];
 
-            const escapePdfText = (value) => String(value).replace(/\\/g, '\\\\').replace(/\\(/g, '\\\\(').replace(/\\)/g, '\\\\)');
+            const escapePdfText = (value) => String(value).replace(/([\\()])/g, '\\$1');
             const lines = rows.map((row, index) => {
                 const y = 760 - (index * 42);
                 const fontSize = index === 0 ? 18 : index === 6 ? 16 : 11;
@@ -1566,7 +1561,7 @@ Disclaimer:</strongNisaab is designed to provide accurate estimates based on sta
 
         // Reset All Form Fields
         function resetCalculator() {
-            document.querySelectorAll('input[type="number"]').forEach(input =input.value = '');
+            document.querySelectorAll('input[type="number"]').forEach((input) => { input.value = ''; });
             calculateZakat();
         }
     </script>
