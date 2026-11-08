@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nisaab-zakat.vercel.app/sitemap.xml
