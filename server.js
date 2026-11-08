@@ -24,7 +24,13 @@ const server = http.createServer((req, res) => {
     }
 
     const extension = path.extname(filePath)
-    const contentType = extension === '.html' ? 'text/html; charset=utf-8' : 'application/octet-stream'
+    const contentTypes = {
+      '.html': 'text/html; charset=utf-8',
+      '.txt': 'text/plain; charset=utf-8',
+      '.xml': 'application/xml; charset=utf-8',
+      '.json': 'application/json; charset=utf-8',
+    }
+    const contentType = contentTypes[extension] || 'application/octet-stream'
     res.writeHead(200, { 'Content-Type': contentType })
     res.end(data)
   })
